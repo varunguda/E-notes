@@ -14,7 +14,7 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
-  phoneno: Number,
+  phoneNo: Number,
   password: {
     type: String,
     required: true
@@ -26,5 +26,4 @@ const UserSchema = new Schema({
 });
 
 let User = mongoose.model('user',UserSchema);
-User.createIndexes();
 module.exports = User;

@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 
-const mongoUri = "mongodb://localhost:27017/enotes";
+const mongoURI = "mongodb+srv://dwin:eRLz6HE6EmDPFO75@enotes.jamwfum.mongodb.net/enotes?retryWrites=true&w=majority";
 
 const connectToMongo = async () => {
   try {
-    await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
-    console.log('Connected to Mongo');
+    await mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+    console.log('CONNECTED TO MONGO');
   } catch (error) {
-    console.error('Error connecting to Mongo:', error);
+    console.error('ERROR CONNECTING TO MONGO:', error);
   }
 };
 
