@@ -6,19 +6,25 @@ const AddNote = () => {
     const { addNote } = context;
 
     const [note, setNote] = useState({
-        title:"",
-        description:"",
-        tag:""
+        "title":"",
+        "description":"",
+        "tag":""
     });
 
     const addClickHandler = (e) =>{
         e.preventDefault();
-        addNote(note.title, note.description);
+        addNote(note.title, note.description, note.tag);
 
         const inputs = document.querySelectorAll('input[type="text"]');
         inputs.forEach(input => {
             input.value = "";
         });
+
+        setNote({
+          "title":"",
+          "description":"",
+          "tag":""
+      })
     }
 
     const changeHandler = (e) =>{
@@ -32,7 +38,7 @@ const AddNote = () => {
       <h2 className="my-3">ADD A NOTE</h2>
       <form>
         <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">
+          <label htmlFor="title" className="form-label">
             Title
           </label>
           <input
@@ -43,8 +49,9 @@ const AddNote = () => {
             onChange={changeHandler}
           />
         </div>
+
         <div className="mb-3">
-          <label htmlFor="exampleInputPassword1" className="form-label">
+          <label htmlFor="description" className="form-label">
             Description
           </label>
           <input
@@ -55,6 +62,20 @@ const AddNote = () => {
             onChange={changeHandler}
           />
         </div>
+
+        <div className="mb-3">
+          <label htmlFor="tag" className="form-label">
+            Tag
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            name="tag"
+            id="tag"
+            onChange={changeHandler}
+          />
+        </div>
+
         <button type="submit" className="btn btn-primary my-3" onClick={addClickHandler}>
           Add Note
         </button>

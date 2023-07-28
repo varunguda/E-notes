@@ -1,7 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
+import noteContext from "../context/notes/noteContext";
 
 const NoteItem = (props) => {
-    const { note } = props;
+
+    const { note, updateNote } = props;
+    const context = useContext(noteContext);
+    const { deleteNote } = context;
+    
+    const deleteClickHandler = () =>{
+      deleteNote(note._id);
+    }
+
+    const editClickHandler = () =>{
+      updateNote(note);
+    }
+
   return (
     <div className="col-md-3">
       <div className="card my-3">
@@ -10,8 +23,13 @@ const NoteItem = (props) => {
           <p className="card-text">
             {note.description}
           </p>
-          <i className="fa-regular fa-pen-to-square"></i>
-          <i className="fa-solid fa-trash mx-3"></i>
+          <i 
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+          className="fa-regular fa-pen-to-square" 
+          onClick={editClickHandler}
+          />
+          <i className="fa-solid fa-trash mx-3" onClick={deleteClickHandler}></i>
         </div>
       </div>
     </div>
