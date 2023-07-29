@@ -1,3 +1,40 @@
+.navbar-brand{
+    font-family: 'Nabla', cursive;
+}
+
+.navbar{
+    background-color: #212121;
+}
+
 .card i{
     cursor: pointer;
+}
+
+.notes, input{
+    font-family: 'Roboto Mono', monospace;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.no-notes{
+    position: relative;
+}
+
+.cursor-effect{
+    height: 100%;
+    border-right: 1px solid white;
+}
+
+.no-notes .hide{
+    display: none;
+}
+
+.disclaimer{
+    position: absolute;
+    font-size: small;
+    color: rgb(253, 108, 108);
+}
+
+form .hide{
+    display: none;
 }

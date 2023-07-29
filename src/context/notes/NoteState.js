@@ -12,9 +12,21 @@ const NoteState = (props) => {
         'Content-Type' : 'application/json',
         'auth-token' : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRjMmM4NmM5MzVjYjdhMzg3ZjQ4NDAwIn0sImlhdCI6MTY5MDQ4Njg5Mn0.bZWffx_vQRyinfcr4Z_XNiOyG6o0m5OfNfhA2woW5ao'
     }
-    const response = await fetch(`${host}/notes/fetchnotes`, {headers});
-    const data = await response.json();
-    setNotes(data);
+
+    try{
+      const response = await fetch(`${host}/notes/fetchnotes`, { headers });
+      const data = await response.json();
+      if(data.length === 0){
+        return "You don't have any notes, feel free to add one...";
+      }
+      if(data.error){
+        return "Seems like something went wrong, please try again later..."
+      }
+      setNotes(data);
+      return data;
+    }catch(err){
+      return "Server connection failed, please try again later..."
+    }
   }
 
   // useEffect(()=>{
@@ -33,18 +45,23 @@ const NoteState = (props) => {
       body: JSON.stringify({ title, description, tag})
     }
 
-    await fetch(`${host}/notes/addnote`, requestOptions);
-    
-    const note = {
-      "_id": "64c2c89935cb7a387f4840ca",
-    "userId": "64c2c86c935cb7a387f4840s0",
-    "title": title,
-    "description": description,
-    "tag": tag?tag:"General",
-    "date": "2023-07-27T19:42:22.344Z",
-    "__v": 0,
+    try{
+      const response = await fetch(`${host}/notes/addnote`, requestOptions);
+      const data = await response.json();
+      
+      const note = {
+      "_id": data._id,
+      "userId": "64c2c86c935cb7a387f4840s0",
+      "title": data.title,
+      "description": data.description,
+      "tag": data.tag?data.tag:"General",
+      "date": "2023-07-27T19:42:22.344Z",
+      "__v": 0,
+      }
+      setNotes(notes.concat(note));
+    }catch(err){
+      console.log(`Error adding note: ${err}`);
     }
-    setNotes(notes.concat(note));
   }
 
   //Delete a Note
@@ -77,15 +94,15 @@ const NoteState = (props) => {
     }
 
     const response = await fetch(`${host}/notes/updatenote/${id}`, requestOptions);
+    const data = await response.json();
 
     const newNotes = notes.map((note)=>{
       if(note._id === id){
-        return {...note, title: title, description: description, tag: tag}
+        return {...note, title: data.title, description: data.description, tag: data.tag}
       }else{
         return note
       }
     })
-
     setNotes(newNotes);
   }
 

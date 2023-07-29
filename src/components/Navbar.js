@@ -4,10 +4,10 @@ import { Link, useLocation } from "react-router-dom";
 const Navbar = () => {
     const location = useLocation();
   return (
-    <nav className="navbar fixed-top navbar-expand-lg bg-primary" data-bs-theme="dark">
+    <nav className="navbar fixed-top navbar-expand-lg" data-bs-theme="dark">
       <div className="container-fluid">
         <a className="navbar-brand" href="/">
-          E Notes
+          E NOTES
         </a>
         <button
           className="navbar-toggler"

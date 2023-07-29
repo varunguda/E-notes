@@ -20,8 +20,8 @@ routes.post(
   [
     body("title").isLength({ min: 1 }).withMessage("Title cannot be empty"),
     body("description")
-      .isLength({ min: 5 })
-      .withMessage("Description must contain atleast 5 characters"),
+      .isLength({ min: 2 })
+      .withMessage("Description must contain atleast 3 characters"),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -50,8 +50,8 @@ routes.put(
   [
     body("title").isLength({ min: 1 }).withMessage("Title cannot be empty"),
     body("description")
-      .isLength({ min: 5 })
-      .withMessage("Description must contain atleast 5 characters"),
+      .isLength({ min: 2 })
+      .withMessage("Description must contain atleast 3 characters"),
   ],
   async (req, res) => {
     const { title, description, tag } = req.body;
@@ -93,13 +93,12 @@ routes.delete("/deletenote/:id", fetchUserId, async (req, res) => {
     if (!note) {
       return res.status(400).send("Note not found");
     }
-    console.log(note.userId.toString());
     if (req.user.id !== note.userId.toString()) {
         return res.status(404).send("Not allowed!");
     }
 
     const deletedNote = await Notes.findByIdAndDelete(req.params.id);
-    return res.json({"Success":"Note has been deleted", deletedNote})
+    return res.send(deletedNote)
 
   } catch (err) {
     return res.status(400).send("Internal Server Error!");
