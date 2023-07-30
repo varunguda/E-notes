@@ -1,12 +1,14 @@
-import React, { useContext, useEffect, useId, useRef, useState } from "react";
+import React, { useContext, useEffect, useId, useState } from "react";
 import NoteItem from "./noteItem";
 import noteContext from "../context/notes/noteContext";
+import TextAnim from "./textAnim";
 
 const Notes = () => {
   const context = useContext(noteContext);
   const { notes, fetchNotes, editNote } = context;
   const titleDisId = useId();
   const descDisId = useId();
+  const [fetched, setFetched] = useState(false);
 
   const [note, setNote] = useState({
     title: "",
@@ -14,72 +16,30 @@ const Notes = () => {
     tag: "",
   });
 
-  const intervalRef = useRef([]);
-  const textRef = useRef("");
-  const [text, setText] = useState(textRef.current);
-  const res = ["Please wait..."];
+  const [res, setRes] = useState(["Please wait..."]);
   const [hideCursor, setHideCursor] = useState(false);
 
   useEffect(() => {
-    let firstIndex = 0;
-
-    let intervalFirstText = setInterval(() => {
-      if (firstIndex >= res[0].length) {
-        if (res.length>1) {
-          textRef.current = textRef.current.slice(0, -1);
-          setText(textRef.current);
-          if (textRef.current === "") {
-            secondTextInterval();
-            clearInterval(intervalFirstText);
-          }
+    const fetchData = async () => {
+      try {
+        const data = await fetchNotes();
+        if (data) {
+          setFetched((prev) => !prev);
         }
+        if (!Array.isArray(data)) {
+          setRes((prev) => [...prev, data]);
+        } else {
+          setRes((prev) => [
+            ...prev,
+            "You don't have any notes, feel free to add one...",
+          ]);
+        }
+      } catch (err) {
+        console.error(err);
       }
-      textRef.current += res[0].charAt(firstIndex);
-      firstIndex++;
+    };
 
-      setText(textRef.current);
-    }, 80);
-
-    intervalRef.current.push(intervalFirstText);
-
-    return () => {
-      // eslint-disable-next-line 
-      intervalRef.current.forEach(clearInterval)
-    }
-
-    // eslint-disable-next-line 
-  }, []);
-
-  const secondTextInterval = () => {
-    let secondIndex = 0;
-
-    let intervalSecondText = setInterval(() => {
-      if (secondIndex >= res[1].length) {
-        clearInterval(intervalSecondText);
-      }
-      textRef.current += res[1].charAt(secondIndex);
-      secondIndex++;
-
-      setText(textRef.current);
-    }, 80);
-
-    intervalRef.current.push(secondTextInterval);
-  };
-
-  useEffect(() => {
-
-    fetchNotes()
-    .then((data)=>{
-      if(!Array.isArray(data)){
-        setTimeout(() => {
-          res.push(data);
-        }, 2000);
-      }else{
-        setTimeout(() => {
-          res.push("You don't have any notes, feel free to add one...");
-        }, 2000);
-      }
-    })
+    fetchData();
 
     const intervalId = setInterval(() => {
       setHideCursor((prevHideCursor) => !prevHideCursor);
@@ -252,7 +212,9 @@ const Notes = () => {
           })
         ) : (
           <div className="no-notes">
-            <span className="no-notes-caption">{text}</span>
+            <span className="no-notes-caption">
+              <TextAnim res={res} fetched={fetched} />
+            </span>
             <span
               className={`cursor-effect ${hideCursor ? "hide" : ""}`}
             ></span>
