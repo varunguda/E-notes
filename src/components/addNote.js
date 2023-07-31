@@ -2,8 +2,7 @@ import React, { useContext, useState, useId } from "react";
 import noteContext from "../context/notes/noteContext";
 
 const AddNote = () => {
-  const context = useContext(noteContext);
-  const { addNote } = context;
+  const { addNote } = useContext(noteContext);
 
   const titleDisId = useId();
   const descDisId = useId();
@@ -116,7 +115,6 @@ const AddNote = () => {
         <button
           type="submit"
           className="btn btn-primary my-3"
-          style={{backgroundColor: 'rgb(255 195 0)', color: 'black', borderColor:'#fd6007'}}
           onClick={addClickHandler}
         >
           Add Note

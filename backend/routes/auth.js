@@ -129,15 +129,16 @@ routes.post(
 
     try {
       const { name, password } = req.body;
+      let success = false;
       const user = await Users.findOne({
         $or: [{ username: name }, { email: name }],
       });
       if (!user) {
-        return res.status(400).json("{ Wrong Username or password }");
+        return res.status(400).json({success: success, message: "Wrong Username or password"});
       }
       const verified = await bcrypt.compare(password, user.password);
       if (!verified) {
-        return res.status(400).json("{ Wrong Username or password }");
+        return res.status(400).json({success: success, message: "Wrong Username or password"});
       }
       const data = {
         user: {
@@ -145,10 +146,11 @@ routes.post(
         },
       };
       const authToken = jwt.sign(data, process.env.JWT_SECRET);
-      res.send({ authToken });
+      success = true;
+      res.json({ success: success, authToken });
     } catch (err) {
       console.log(err);
-      res.status(500).send("{ Internal Server Error }");
+      res.status(500).json({error: " Internal Server Error "});
     }
   }
 );

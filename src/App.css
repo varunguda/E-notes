@@ -38,3 +38,10 @@
 form .hide{
     display: none;
 }
+
+.btn-primary{
+    background-color: rgb(255 195 0);
+    color: black;
+    font-weight: 500;
+    border-color: #fd6007;
+}
