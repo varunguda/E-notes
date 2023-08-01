@@ -82,9 +82,11 @@ routes.post(
       .withMessage("Please enter a valid Phone number"),
   ],
   async (req, res) => {
+    let isSuccess = false;
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ success: isSuccess, errors: errors.array() });
     }
 
     const saltRounds = 10;
@@ -105,10 +107,11 @@ routes.post(
         },
       };
       const authToken = jwt.sign(data, process.env.JWT_SECRET);
-      res.send({ authToken });
+      isSuccess = true;
+      res.json({ success: isSuccess , authToken });
     } catch (err) {
       console.log(err.message);
-      res.status(500).send("{ Internal Server Error }");
+      res.status(500).json({ error: err.message, message: "Internal Server Error" });
     }
   }
 );
@@ -127,18 +130,18 @@ routes.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
+    let isSuccess = false;
     try {
       const { name, password } = req.body;
-      let success = false;
       const user = await Users.findOne({
         $or: [{ username: name }, { email: name }],
       });
       if (!user) {
-        return res.status(400).json({success: success, message: "Wrong Username or password"});
+        return res.status(400).json({success: isSuccess, message: "Wrong Username or password"});
       }
       const verified = await bcrypt.compare(password, user.password);
       if (!verified) {
-        return res.status(400).json({success: success, message: "Wrong Username or password"});
+        return res.status(400).json({success: isSuccess, message: "Wrong Username or password"});
       }
       const data = {
         user: {
@@ -146,26 +149,27 @@ routes.post(
         },
       };
       const authToken = jwt.sign(data, process.env.JWT_SECRET);
-      success = true;
-      res.json({ success: success, authToken });
+      isSuccess = true;
+      return res.json({ success: isSuccess, authToken });
     } catch (err) {
       console.log(err);
-      res.status(500).json({error: " Internal Server Error "});
+      res.status(500).json({success: isSuccess, error: " Internal Server Error "});
     }
   }
 );
 
 routes.post("/getuser", fetchUserId, async (req, res) => {
+  let isSuccess = false;
   try {
     const userId = req.user.id;
     const user = await Users.findById(userId).select("-password");
     if (!user) {
-      return res.status(401).json("{ User not found! }");
+      return res.status(401).json({ success: isSuccess, error: "User not found!" });
     }
-    return res.send(user);
+    return res.json({success: isSuccess, user});
   } catch (err) {
     console.log(err);
-    res.status(500).send("{ Internal Server Error }");
+    res.status(500).json({ success: isSuccess, error: "Internal Server Error" });
   }
 });
 

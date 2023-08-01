@@ -4,11 +4,9 @@ import noteContext from "../context/notes/noteContext";
 import TextAnim from "./textAnim";
 
 const Notes = () => {
-  const context = useContext(noteContext);
-  const { notes, fetchNotes, editNote } = context;
+  const { notes, editNote, res, fetched } = useContext(noteContext);
   const titleDisId = useId();
   const descDisId = useId();
-  const [fetched, setFetched] = useState(false);
 
   const [note, setNote] = useState({
     title: "",
@@ -16,30 +14,9 @@ const Notes = () => {
     tag: "",
   });
 
-  const [res, setRes] = useState(["Please wait..."]);
   const [hideCursor, setHideCursor] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchNotes();
-        if (data) {
-          setFetched((prev) => !prev);
-        }
-        if (!Array.isArray(data)) {
-          setRes((prev) => [...prev, data]);
-        } else {
-          setRes((prev) => [
-            ...prev,
-            "You don't have any notes, feel free to add one...",
-          ]);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchData();
 
     const intervalId = setInterval(() => {
       setHideCursor((prevHideCursor) => !prevHideCursor);

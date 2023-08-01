@@ -1,8 +1,10 @@
 import React, { useContext, useState, useId } from "react";
 import noteContext from "../context/notes/noteContext";
+import AuthContext from "../context/auth/AuthContext";
 
 const AddNote = () => {
   const { addNote } = useContext(noteContext);
+  const { loggedIn } = useContext(AuthContext);
 
   const titleDisId = useId();
   const descDisId = useId();
@@ -77,6 +79,7 @@ const AddNote = () => {
             id="title"
             name="title"
             onChange={changeHandler}
+            disabled={loggedIn ? false : true}
           />
           <span id={titleDisId} className="title-disclaimer disclaimer hide">
             Title cannot be empty
@@ -93,6 +96,7 @@ const AddNote = () => {
             name="description"
             id="description"
             onChange={changeHandler}
+            disabled={loggedIn ? false : true}
           />
           <span id={descDisId} className="desc-disclaimer disclaimer hide">
             Description must contain atleast 3 characters
@@ -109,6 +113,7 @@ const AddNote = () => {
             name="tag"
             id="tag"
             onChange={changeHandler}
+            disabled={loggedIn ? false : true}
           />
         </div>
 
@@ -116,6 +121,7 @@ const AddNote = () => {
           type="submit"
           className="btn btn-primary my-3"
           onClick={addClickHandler}
+          disabled={loggedIn ? false : true}
         >
           Add Note
         </button>
