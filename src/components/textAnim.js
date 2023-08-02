@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
+// could've used some simple css properties to make this, but i wanted it to look more realistic and responsive.
 const TextAnim = (props) => {
   const { res, fetched } = props;
 

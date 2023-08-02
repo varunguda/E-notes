@@ -1,3 +1,4 @@
+import React, {useState} from 'react';
 import "./App.css";
 import Home from "./components/Home";
 import About from "./components/About";
@@ -9,6 +10,7 @@ import NoteState from "./context/notes/NoteState";
 import AuthState from "./context/auth/AuthState";
 
 function App() {
+  
   return (
     <div className="App">
       <AuthState>

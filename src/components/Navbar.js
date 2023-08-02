@@ -1,17 +1,10 @@
 import React, { useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import AuthContext from "../context/auth/AuthContext";
-import './styles/alert-dialog.css'
-
-import * as AlertDialog from "@radix-ui/react-alert-dialog";
 
 const Navbar = () => {
   const location = useLocation();
-  const { loggedIn, logout } = useContext(AuthContext);
-
-  const logoutHandler = (e) => {
-    logout();
-  };
+  const { loggedIn } = useContext(AuthContext);
 
   return (
     <>
@@ -55,44 +48,20 @@ const Navbar = () => {
                 </Link>
               </li>
             </ul>
-            <form className="d-flex" role="search">
+            <form className="d-flex">
               {loggedIn ? (
-                <AlertDialog.Root>
-                  <AlertDialog.Trigger asChild>
-                    <button
-                      className="btn btn-primary mx-1"
-                    >
-                      Logout
-                    </button>
-                  </AlertDialog.Trigger>
-                  <AlertDialog.Portal>
-                    <AlertDialog.Overlay className="AlertDialogOverlay" />
-                    <AlertDialog.Content className="AlertDialogContent">
-                      <AlertDialog.Title className="AlertDialogTitle">
-                        Are you absolutely sure?
-                      </AlertDialog.Title>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: 25,
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        <AlertDialog.Cancel asChild>
-                          <button className="Button mauve">Cancel</button>
-                        </AlertDialog.Cancel>
-                        <AlertDialog.Action asChild>
-                          <button
-                            className="Button red"
-                            onClick={logoutHandler}
-                          >
-                            Yes, Log me out
-                          </button>
-                        </AlertDialog.Action>
-                      </div>
-                    </AlertDialog.Content>
-                  </AlertDialog.Portal>
-                </AlertDialog.Root>
+                <>
+                  <button
+                    type="button"
+                    className="btn btn-primary mx-1"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModalLogout"
+                  >
+                    <abbr title="Logout">
+                      <i className="fa-solid fa-right-from-bracket"></i>
+                    </abbr>
+                  </button>
+                </>
               ) : (
                 <>
                   {location.pathname !== "/login" &&
