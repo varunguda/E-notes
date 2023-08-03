@@ -30,6 +30,8 @@
 }
 
 .disclaimer{
+    display:block;
+    margin-top: 3px;
     position: absolute;
     font-size: small;
     color: rgb(253, 108, 108);

@@ -51,16 +51,16 @@ const Navbar = () => {
             <form className="d-flex">
               {loggedIn ? (
                 <>
-                  <button
-                    type="button"
-                    className="btn btn-primary mx-1"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModalLogout"
-                  >
-                    <abbr title="Logout">
+                  <abbr title="Logout">
+                    <button
+                      type="button"
+                      className="btn btn-primary mx-1"
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModalLogout"
+                    >
                       <i className="fa-solid fa-right-from-bracket"></i>
-                    </abbr>
-                  </button>
+                    </button>
+                  </abbr>
                 </>
               ) : (
                 <>
@@ -72,7 +72,7 @@ const Navbar = () => {
                         to="/login"
                         role="button"
                       >
-                        Login
+                        Log in
                       </Link>
                       <Link
                         className="btn btn-secondary mx-1"

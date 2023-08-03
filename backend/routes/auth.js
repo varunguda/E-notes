@@ -27,7 +27,7 @@ routes.post(
       }),
 
     body("username")
-      .isLength({ min: 3 })
+      .isLength({ min: 3, max: 10 })
       .withMessage("Username must have atleast 3 characters")
       .custom((val) => {
         const userNameFormat = (name) => {
@@ -42,17 +42,17 @@ routes.post(
           try {
             const exist = await Users.findOne({ username: name });
             if (exist) {
-              return Promise.reject("Username already exists!");
+              return Promise.reject({userExist:true,message:"Username already exists!"});
             }
             return Promise.resolve();
           } catch (err) {
             console.error(err);
             return Promise.reject("Error checking for username existence");
           }
-        };
+        }
 
         if (!userNameFormat(val)) {
-          return Promise.reject("Invalid Username");
+          return Promise.reject("Invalid username");
         } else {
           return checkCommon(val);
         }
@@ -60,8 +60,8 @@ routes.post(
 
     body("password")
       .bail()
-      .isLength({ min: 8 })
-      .withMessage("A password must have atleast contain 8 cahracters")
+      .isLength({ min: 8, max: 40 })
+      .withMessage("A password must contain atleast 8 characters")
       .custom((val) => {
         const passwordFormat = (pass) => {
           const regex =
@@ -80,10 +80,13 @@ routes.post(
       .optional()
       .isLength({ min: 10, max: 10 })
       .withMessage("Please enter a valid Phone number"),
+
+    body("fullName")
+      .isLength({ min: 3, max: 20 })
+      .withMessage("Full name must have atleast 5 characters"),
   ],
   async (req, res) => {
     let isSuccess = false;
-
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ success: isSuccess, errors: errors.array() });
@@ -137,11 +140,11 @@ routes.post(
         $or: [{ username: name }, { email: name }],
       });
       if (!user) {
-        return res.status(400).json({success: isSuccess, message: "Wrong Username or password"});
+        return res.json({success: isSuccess, message: "Wrong Username or password"});
       }
       const verified = await bcrypt.compare(password, user.password);
       if (!verified) {
-        return res.status(400).json({success: isSuccess, message: "Wrong Username or password"});
+        return res.json({success: isSuccess, message: "Wrong Username or password"});
       }
       const data = {
         user: {
