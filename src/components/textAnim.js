@@ -43,7 +43,7 @@ const TextAnim = (props) => {
                 animFn(firstIndex, resIndexRef.current);
               }
             }, 80);
-          }, 2000);
+          }, 400);
           clearInterval(firstIntervalRef.current);
         } else {
           if (fetchRef.current) {
@@ -70,7 +70,7 @@ const TextAnim = (props) => {
             animFn(0, resIndex);
           }
         }, 80);
-      }, 1000)
+      }, 200)
     }
     else{
       resRef.current = res;
@@ -100,7 +100,7 @@ const TextAnim = (props) => {
     // eslint-disable-next-line
   }, []);
 
-  return <>{text}</>;
+  return <span className="text-anim">{text}</span>;
 };
 
 export default TextAnim;

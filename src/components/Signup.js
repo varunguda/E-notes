@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import AuthContext from "../context/auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -16,7 +16,6 @@ const Signup = () => {
   });
   const [ checked, setChecked ] = useState(false)
   const [ valid, setValid ] = useState(false);
-  const [ userExist, setUserExist ] = useState(false);
 
   const createHandler = (e) =>{
     e.preventDefault();
@@ -37,8 +36,6 @@ const Signup = () => {
       if(!data.success){
         console.log(data)
         if(data.errors.some(err=> err.msg.userExist)){
-          console.log('y')
-          // setUserExist(true);
           const userDis = document.querySelector('.username-disclaimer');
           userDis.innerHTML = 'This username is already taken!'
           userDis.classList.remove('hide')
@@ -70,8 +67,11 @@ const Signup = () => {
 
   const phoneNoValidator = (e) =>{
     const phoneDis = document.querySelector('.phoneNo-disclaimer');
-    if(e.target.name !== 'phoneNo' && phoneDis.innerHTML === ''){
-      return true;
+    if(e.target.name !== 'phoneNo'){
+      if(phoneDis.innerHTML === ''){
+        return true
+      }
+      return false
     }
     if(e.target.value.length === 0){
       phoneDis.innerHTML = ''
@@ -103,6 +103,11 @@ const Signup = () => {
     }
     if(e.target.value.length<8){
       passDis.innerHTML = "Password must contain atleast 8 characters";
+      passDis.classList.remove('hide');
+      return false;
+    }
+    if(e.target.value.length>24){
+      passDis.innerHTML = "Password too long!";
       passDis.classList.remove('hide');
       return false;
     }
@@ -159,6 +164,11 @@ const Signup = () => {
       nameDis.classList.remove('hide');
       return false
     }
+    if(e.target.value.length>20){
+      nameDis.innerHTML = "Name is too long!"
+      nameDis.classList.remove('hide');
+      return false
+    }
     nameDis.innerHTML = ''
     nameDis.classList.add('hide');
     return true
@@ -190,6 +200,11 @@ const Signup = () => {
       userDis.classList.remove('hide');
       return false;
     }
+    if(e.target.value.length > 14){
+      userDis.innerHTML = "username is too long!";
+      userDis.classList.remove('hide');
+      return false;
+    }
     if(!usernameRegex(e.target.value)){
      userDis.innerHTML = "Invalid charcters in username, a username can only have lowercase alphabets, _ and numbers";
      userDis.classList.remove('hide');
@@ -204,7 +219,7 @@ const Signup = () => {
     <form className="row g-3 justify-content-center" onSubmit={createHandler}>
       <div className="col-md-10 mb-4">
         <label htmlFor="username" className="form-label">
-          Username *
+          username *
         </label>
         <div className="input-group">
           <span className="input-group-text" id="inputGroupPrepend2">
@@ -215,7 +230,6 @@ const Signup = () => {
             className="form-control"
             id="username"
             aria-describedby="inputGroupPrepend2"
-            required=""
             name="username"
             onChange={changeHandler}
           />
@@ -230,7 +244,6 @@ const Signup = () => {
           type="text"
           className="form-control"
           id="fullName"
-          required=""
           name="fullName"
           onChange={changeHandler}
         />
@@ -244,7 +257,6 @@ const Signup = () => {
           type="text"
           className="form-control"
           id="phoneNo"
-          required=""
           name="phoneNo"
           onChange={changeHandler}
         />
@@ -258,7 +270,6 @@ const Signup = () => {
           type="email"
           className="form-control"
           id="email"
-          required=""
           name="email"
           onChange={changeHandler}
         />
@@ -272,7 +283,6 @@ const Signup = () => {
           type="password"
           className="form-control"
           id="password"
-          required=""
           name="password"
           onChange={changeHandler}
         />
@@ -283,9 +293,7 @@ const Signup = () => {
           <input
             className="form-check-input"
             type="checkbox"
-            defaultValue=""
             id="checkbox"
-            required=""
             onChange={checkHandler}
           />
           <label className="form-check-label" htmlFor="checkbox">
@@ -295,7 +303,7 @@ const Signup = () => {
         </div>
       </div>
       <div className="col-10 d-flex align-items-center justify-content-between">
-        <button className="btn btn-primary" type="submit" disabled={!valid}>
+        <button className="btn btn-warning" type="submit" disabled={!valid}>
           Create Account
         </button>
 

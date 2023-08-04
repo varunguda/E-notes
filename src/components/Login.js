@@ -82,7 +82,7 @@ const Login = () => {
           />
         </div>
         <div className="d-flex justify-content-between">
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-warning">
             Log in
           </button>
           <span>

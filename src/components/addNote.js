@@ -119,7 +119,7 @@ const AddNote = () => {
 
         <button
           type="submit"
-          className="btn btn-primary my-3"
+          className="btn btn-warning my-3"
           onClick={addClickHandler}
           disabled={loggedIn ? false : true}
         >

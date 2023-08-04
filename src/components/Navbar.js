@@ -54,7 +54,7 @@ const Navbar = () => {
                   <abbr title="Logout">
                     <button
                       type="button"
-                      className="btn btn-primary mx-1"
+                      className="btn btn-warning mx-1"
                       data-bs-toggle="modal"
                       data-bs-target="#exampleModalLogout"
                     >
@@ -68,14 +68,14 @@ const Navbar = () => {
                   location.pathname !== "/signup" ? (
                     <>
                       <Link
-                        className="btn btn-primary mx-1"
+                        className="btn mx-1 btn-warning"
                         to="/login"
                         role="button"
                       >
                         Log in
                       </Link>
                       <Link
-                        className="btn btn-secondary mx-1"
+                        className="btn btn-light mx-1"
                         to="/signup"
                         role="button"
                       >

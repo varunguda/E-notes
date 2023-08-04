@@ -27,7 +27,7 @@ routes.post(
       }),
 
     body("username")
-      .isLength({ min: 3, max: 10 })
+      .isLength({ min: 3, max: 14 })
       .withMessage("Username must have atleast 3 characters")
       .custom((val) => {
         const userNameFormat = (name) => {
@@ -60,7 +60,7 @@ routes.post(
 
     body("password")
       .bail()
-      .isLength({ min: 8, max: 40 })
+      .isLength({ min: 8, max: 24 })
       .withMessage("A password must contain atleast 8 characters")
       .custom((val) => {
         const passwordFormat = (pass) => {
