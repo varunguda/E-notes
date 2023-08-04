@@ -107,7 +107,7 @@ const AuthState = (props) => {
     setLoggedIn((prev) => !prev);
     localStorage.removeItem("token");
     setAuthToken(localStorage.getItem("token"));
-    return;
+    return
   };
 
   return (
