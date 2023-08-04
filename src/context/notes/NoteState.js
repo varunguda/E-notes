@@ -14,9 +14,9 @@ const NoteState = (props) => {
 
     setNotes([]);
 
-    if (authToken === null) {
+    if (!loggedIn ) {
       setFetched(prev=>!prev);
-      setRes([res[0],"Login or Signup to add your personal notes!",]);
+      setRes([res[0],"Login or Sign up to add your personal notes!",]);
       return;
     }
 
@@ -48,16 +48,16 @@ const NoteState = (props) => {
       console.error(err);
       return setRes([
         res[0],
-        "Server connection failed, please try again later...",
+        "Server connection failed, please try again later..."
       ]);
     }
-  };
+  }
 
   useEffect(()=>{
     // notes is fetched whenever the authToken or loggedIn state of authState.js changes
-    fetchNotes();
+      fetchNotes();
     // eslint-disable-next-line
-  },[authToken, loggedIn])
+  },[loggedIn])
 
   //Add a Note
   const addNote = async (title, description, tag) => {

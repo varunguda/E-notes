@@ -176,4 +176,13 @@ routes.post("/getuser", fetchUserId, async (req, res) => {
   }
 });
 
+// routes.post("/deleteuser", fetchUserId ,(req, res)=>{
+//   try{
+//     const userId = req.user.id;
+//     console.log(userId)
+//   }catch(err){
+
+//   }
+// })
+
 module.exports = routes;
