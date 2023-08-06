@@ -4,7 +4,7 @@ import AuthContext from "../context/auth/AuthContext";
 
 const AddNote = () => {
   const { addNote } = useContext(noteContext);
-  const { loggedIn } = useContext(AuthContext);
+  const { userFetched } = useContext(AuthContext);
 
   const titleDisId = useId();
   const descDisId = useId();
@@ -79,10 +79,10 @@ const AddNote = () => {
             id="title"
             name="title"
             onChange={changeHandler}
-            disabled={loggedIn ? false : true}
+            disabled={userFetched ? false : true}
           />
           <span id={titleDisId} className="title-disclaimer disclaimer hide">
-            {loggedIn?"Title cannot be empty":""}
+            {userFetched?"Title cannot be empty":""}
           </span>
         </div>
 
@@ -96,10 +96,10 @@ const AddNote = () => {
             name="description"
             id="description"
             onChange={changeHandler}
-            disabled={loggedIn ? false : true}
+            disabled={userFetched ? false : true}
           />
           <span id={descDisId} className="desc-disclaimer disclaimer hide">
-            {loggedIn?"Description must contain atleast 3 characters":""}
+            {userFetched?"Description must contain atleast 3 characters":""}
           </span>
         </div>
 
@@ -113,7 +113,7 @@ const AddNote = () => {
             name="tag"
             id="tag"
             onChange={changeHandler}
-            disabled={loggedIn ? false : true}
+            disabled={userFetched ? false : true}
           />
         </div>
 
@@ -121,7 +121,7 @@ const AddNote = () => {
           type="submit"
           className="btn btn-warning my-3"
           onClick={addClickHandler}
-          disabled={loggedIn ? false : true}
+          disabled={userFetched ? false : true}
         >
           Add Note
         </button>

@@ -3,14 +3,14 @@ import AuthContext from "./AuthContext";
 
 const AuthState = (props) => {
   const port = "http://localhost:5000";
-  const [loggedIn, setLoggedIn] = useState(null);
   const [authToken, setAuthToken] = useState(localStorage.getItem("token"));
+  const [ user, setUser ] = useState({});
+  const [ userFetched, setUserFetched ] = useState('')
 
   const getUser = async () => {
-    setAuthToken(localStorage.getItem("token"));
 
-    if (!authToken) {
-      setLoggedIn(false)
+    if (authToken === null) {
+      setUserFetched(false);
       return;
     }
     const requestOptions = {
@@ -23,10 +23,12 @@ const AuthState = (props) => {
     try {
       const response = await fetch(`${port}/auth/getuser`, requestOptions);
       const data = await response.json();
-      if (data.error) {
+      setUserFetched(true);
+      if (!data.success) {
         console.error(data.error);
+        return
       }
-      setLoggedIn((prev) => !prev);
+      setUser(data.user);
       return data;
     } catch (err) {
       console.error("Error fetching user info: " + err);
@@ -36,7 +38,7 @@ const AuthState = (props) => {
   useEffect(() => {
     getUser();
     // eslint-disable-next-line
-  }, []);
+  }, [authToken])
 
   const loginUser = async (name, password) => {
     const requestOptions = {
@@ -50,15 +52,9 @@ const AuthState = (props) => {
       const response = await fetch(`${port}/auth/login`, requestOptions);
       const data = await response.json();
       if (data.success) {
-        if (localStorage.getItem("token")) {
-          localStorage.removeItem("token");
-        }
+        localStorage.removeItem("token");
         localStorage.setItem("token", data.authToken);
-        setLoggedIn((prev) => !prev);
-        setAuthToken(localStorage.getItem("token"));
-      }
-      if(!data){
-        return
+        setAuthToken(localStorage.getItem('token'));
       }
       return data;
     } catch (err) {
@@ -90,12 +86,9 @@ const AuthState = (props) => {
       const response = await fetch(`${port}/auth/createuser`, requestOptions);
       const json = await response.json();
       if (json.success) {
-        if (localStorage.getItem("token")) {
-          localStorage.removeItem("token");
-        }
+        localStorage.removeItem("token")
         localStorage.setItem("token", json.authToken);
-        setLoggedIn((prev) => !prev);
-        setAuthToken(localStorage.getItem("token"));
+        setAuthToken(localStorage.getItem('token'));
         return json;
       }
       return json;
@@ -105,7 +98,7 @@ const AuthState = (props) => {
   };
 
   const logoutFn = () => {
-    setLoggedIn((prev) => !prev);
+    setUserFetched(false);
     localStorage.removeItem("token");
     setAuthToken(localStorage.getItem("token"));
     return
@@ -113,7 +106,7 @@ const AuthState = (props) => {
 
   return (
     <AuthContext.Provider
-      value={{ loginUser, signupUser, loggedIn, authToken, logoutFn }}
+      value={{ loginUser, signupUser, user, userFetched, authToken, logoutFn }}
     >
       {props.children}
     </AuthContext.Provider>

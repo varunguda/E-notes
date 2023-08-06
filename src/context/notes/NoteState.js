@@ -5,7 +5,7 @@ import AuthContext from "../auth/AuthContext";
 const NoteState = (props) => {
   const host = "http://localhost:5000";
 
-  const { authToken, loggedIn } = useContext(AuthContext);
+  const { authToken, user, userFetched } = useContext(AuthContext);
   const [notes, setNotes] = useState([]);
   const [res, setRes] = useState(["Please wait..."]);
   const [ fetched, setFetched ] = useState(false);
@@ -14,8 +14,8 @@ const NoteState = (props) => {
 
     setNotes([]);
 
-    if (loggedIn === false ) {
-      setFetched(prev=>!prev);
+    if (!userFetched) {
+      setFetched(true);
       setRes([res[0],"Login or Sign up to add your personal notes!",]);
       return;
     }
@@ -28,8 +28,8 @@ const NoteState = (props) => {
     try {
       const response = await fetch(`${host}/notes/fetchnotes`, { headers });
       const data = await response.json();
+      setFetched(true);
       if (data.length === 0) {
-        setFetched(prev=>!prev);
         return setRes([
           res[0],
           "You don't have any notes, feel free to add one...",
@@ -42,7 +42,6 @@ const NoteState = (props) => {
         ]);
       }
       setRes([res[0],"You don't have any notes, feel free to add one..."])
-      setFetched(prev=>!prev);
       setNotes(data);
     } catch (err) {
       console.error(err);
@@ -55,22 +54,14 @@ const NoteState = (props) => {
 
   useEffect(()=>{
     // notes is fetched whenever the authToken or loggedIn state of authState.js changes
-    if(loggedIn !== null){
-      fetchNotes();
+    if(userFetched!==''){
+      fetchNotes()
     }
     // eslint-disable-next-line
-  },[loggedIn])
+  },[userFetched])
 
   //Add a Note
   const addNote = async (title, description, tag) => {
-
-    if(!loggedIn){
-      setRes([
-        res[0],
-        "Seems like something went wrong, try logging in again:(",
-      ]);
-      return
-    }
 
     const requestOptions = {
       method: "POST",
@@ -87,7 +78,7 @@ const NoteState = (props) => {
 
       const note = {
         _id: data._id,
-        userId: "64c2c86c935cb7a387f4840s0",
+        userId: user._id,
         title: data.title,
         description: data.description,
         tag: data.tag ? data.tag : "General",
@@ -152,7 +143,7 @@ const NoteState = (props) => {
 
   return (
     <noteContext.Provider
-      value={{ notes, addNote, deleteNote, editNote, fetchNotes, res, fetched }}
+      value={{ notes, addNote, deleteNote, editNote, res, fetched }}
     >
       {props.children}
     </noteContext.Provider>

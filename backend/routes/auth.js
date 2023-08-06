@@ -169,6 +169,7 @@ routes.post("/getuser", fetchUserId, async (req, res) => {
     if (!user) {
       return res.status(401).json({ success: isSuccess, error: "User not found!" });
     }
+    isSuccess = true
     return res.json({success: isSuccess, user});
   } catch (err) {
     console.log(err);

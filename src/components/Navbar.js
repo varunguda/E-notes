@@ -4,7 +4,7 @@ import AuthContext from "../context/auth/AuthContext";
 
 const Navbar = () => {
   const location = useLocation();
-  const { loggedIn } = useContext(AuthContext);
+  const { userFetched } = useContext(AuthContext);
 
   return (
     <>
@@ -49,7 +49,7 @@ const Navbar = () => {
               </li>
             </ul>
             <form className="d-flex">
-              {loggedIn ? (
+              {userFetched ? (
                 <>
                   <abbr title="Logout">
                     <button
