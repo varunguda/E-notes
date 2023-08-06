@@ -56,6 +56,9 @@ const AuthState = (props) => {
         setLoggedIn((prev) => !prev);
         setAuthToken(localStorage.getItem("token"));
       }
+      if(!data){
+        return
+      }
       return data;
     } catch (err) {
       console.error(`Error logging in user: ${err}`);
@@ -94,22 +97,22 @@ const AuthState = (props) => {
         setAuthToken(localStorage.getItem("token"));
         return json;
       }
-      console.error(json.errors.map((elem) => elem.msg));
       return json;
     } catch (err) {
       console.error(`Error creating the user: ${err}`);
     }
   };
 
-  const logout = () => {
+  const logoutFn = () => {
     setLoggedIn((prev) => !prev);
     localStorage.removeItem("token");
     setAuthToken(localStorage.getItem("token"));
+    return
   };
 
   return (
     <AuthContext.Provider
-      value={{ loginUser, signupUser, loggedIn, authToken, logout }}
+      value={{ loginUser, signupUser, loggedIn, authToken, logoutFn }}
     >
       {props.children}
     </AuthContext.Provider>

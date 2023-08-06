@@ -10,7 +10,7 @@
     cursor: pointer;
 }
 
-.notes, input{
+.text-anim, input{
     font-family: 'Roboto Mono', monospace;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -30,6 +30,8 @@
 }
 
 .disclaimer{
+    display:block;
+    margin-top: 3px;
     position: absolute;
     font-size: small;
     color: rgb(253, 108, 108);
@@ -39,9 +41,18 @@ form .hide{
     display: none;
 }
 
-.btn-primary{
-    background-color: rgb(255 195 0);
-    color: black;
-    font-weight: 500;
-    border-color: #fd6007;
+.cursor{
+    height: 100%;
+    border-right: 1px solid white;
+    animation: blink 1s infinite steps(1);
 }
+  
+  @keyframes blink {
+    0%, 100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  

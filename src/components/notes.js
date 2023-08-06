@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useId, useState } from "react";
+import React, { useContext, useId, useState } from "react";
 import NoteItem from "./noteItem";
 import noteContext from "../context/notes/noteContext";
 import TextAnim from "./textAnim";
 
 const Notes = () => {
-  const { notes, editNote, res, fetched } = useContext(noteContext);
+  const { notes, editNote, res, fetched, deleteNote } = useContext(noteContext);
   const titleDisId = useId();
   const descDisId = useId();
 
@@ -12,21 +12,7 @@ const Notes = () => {
     title: "",
     description: "",
     tag: "",
-  });
-
-  const [hideCursor, setHideCursor] = useState(false);
-
-  useEffect(() => {
-
-    const intervalId = setInterval(() => {
-      setHideCursor((prevHideCursor) => !prevHideCursor);
-    }, 500);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-    // eslint-disable-next-line
-  }, []);
+  })
 
   const saveClickHandler = (e) => {
     e.preventDefault();
@@ -77,6 +63,14 @@ const Notes = () => {
   const updateNote = (note) => {
     setNote(note);
   };
+
+  const deleteClickHandler = (note) => {
+    setNote(note);
+  };
+
+  const deleteNoteHandler = () =>{
+    deleteNote(note._id);
+  }
 
   return (
     <div>
@@ -161,14 +155,14 @@ const Notes = () => {
               <div className="modal-footer">
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  className="btn btn-light"
                   data-bs-dismiss="modal"
                 >
                   Close
                 </button>
                 <button
                   type="button"
-                  className="btn btn-primary"
+                  className="btn btn-warning"
                   onClick={saveClickHandler}
                 >
                   Save changes
@@ -179,12 +173,58 @@ const Notes = () => {
         </div>
       </>
 
+
+      <div
+        className="modal fade"
+        id="exampleModalDelete"
+        tabIndex={-1}
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="exampleModalLabel">
+                Are you sure you want to delete this note?
+              </h1>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              />
+            </div>
+            <div className="modal-body">
+              This action is permanent and cannot be undone
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-light"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="btn btn-warning"
+                onClick={deleteNoteHandler}
+                data-bs-dismiss="modal"
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
       <h2>YOUR NOTES</h2>
       <div className="row my-4 mx-1 notes">
         {notes && notes.length > 0 ? (
           notes.map((note) => {
             return (
-              <NoteItem key={note._id} note={note} updateNote={updateNote} />
+              <NoteItem key={note._id} note={note} updateNote={updateNote} deleteNote = {deleteClickHandler}/>
             );
           })
         ) : (
@@ -192,9 +232,7 @@ const Notes = () => {
             <span className="no-notes-caption">
               <TextAnim res={res} fetched={fetched} />
             </span>
-            <span
-              className={`cursor-effect ${hideCursor ? "hide" : ""}`}
-            ></span>
+            <span className="cursor"></span>
           </div>
         )}
       </div>

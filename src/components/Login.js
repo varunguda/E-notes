@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import AuthContext from "../context/auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -10,18 +10,36 @@ const Login = () => {
     name: "",
     password: "",
   });
+  const alertRef = useRef(null);
+
+  const appendAlert = (message, type) => {
+    alertRef.current.innerHTML = [
+      `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+      `   <div>${message}</div>`,
+      '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+      "</div>",
+    ].join("");
+    // setTimeout(()=>{
+    //   alertRef.current.innerHTML = ""
+    // },3000)
+  };
 
   const loginHandler = (e) => {
     e.preventDefault();
+    if (credentials.name === "" || credentials.password === "") {
+      return appendAlert("Please enter valid username or password", "warning");
+    }
     loginUser(credentials.name, credentials.password)
       .then((data) => {
-        if (data.success) {
-          navigate("/");
+        if (!data.success) {
+          setCredentials({ ...credentials, password:""})
+          return appendAlert(
+            "Invalid username or password",
+            "danger"
+          );
         }
+        navigate("/");
       })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   const changeHandler = (e) => {
@@ -30,7 +48,9 @@ const Login = () => {
 
   return (
     <div>
-      <form onSubmit={loginHandler}>
+      <div id="liveAlertPlaceholder" className="mx-5" ref={alertRef}></div>
+
+      <form className="mx-5" onSubmit={loginHandler}>
         <div className="mb-3">
           <label htmlFor="exampleInputEmail1" className="form-label">
             Uesrname or Email address
@@ -41,6 +61,7 @@ const Login = () => {
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
             name="name"
+            value={credentials.name}
             onChange={changeHandler}
           />
           <div id="emailHelp" className="form-text">
@@ -56,12 +77,13 @@ const Login = () => {
             className="form-control"
             id="exampleInputPassword1"
             name="password"
+            value={credentials.password}
             onChange={changeHandler}
           />
         </div>
         <div className="d-flex justify-content-between">
-          <button type="submit" className="btn btn-primary">
-            Submit
+          <button type="submit" className="btn btn-warning">
+            Log in
           </button>
           <span>
             New to Enotes?&nbsp;

@@ -82,7 +82,7 @@ const AddNote = () => {
             disabled={loggedIn ? false : true}
           />
           <span id={titleDisId} className="title-disclaimer disclaimer hide">
-            Title cannot be empty
+            {loggedIn?"Title cannot be empty":""}
           </span>
         </div>
 
@@ -99,7 +99,7 @@ const AddNote = () => {
             disabled={loggedIn ? false : true}
           />
           <span id={descDisId} className="desc-disclaimer disclaimer hide">
-            Description must contain atleast 3 characters
+            {loggedIn?"Description must contain atleast 3 characters":""}
           </span>
         </div>
 
@@ -119,7 +119,7 @@ const AddNote = () => {
 
         <button
           type="submit"
-          className="btn btn-primary my-3"
+          className="btn btn-warning my-3"
           onClick={addClickHandler}
           disabled={loggedIn ? false : true}
         >

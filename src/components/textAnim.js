@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 
+// could've used some simple css properties to make this, but i wanted the text animation to look more realistic and responsive.
+
 const TextAnim = (props) => {
   const { res, fetched } = props;
-
-  let intervalFirstText;
-  let timeoutInterval;
 
   const textRef = useRef("");
   const resRef = useRef("");
   const fetchRef = useRef(0);
   const resIndexRef = useRef(0);
-  const intervalRef = useRef([]);
+  const firstIntervalRef = useRef(null);
+  const secIntervalRef = useRef(null);
   const [text, setText] = useState(textRef.current);
   const [resIndex, setResIndex] = useState(0);
 
@@ -19,38 +19,35 @@ const TextAnim = (props) => {
   fetchRef.current = fetched;
   resRef.current = res;
 
-  intervalRef.current.push(intervalFirstText);
-  intervalRef.current.push(timeoutInterval);
-
   const cleanUp = () => {
     textRef.current = textRef.current.slice(0, -1);
     setText(textRef.current);
   };
 
   const animFn = (firstIndex, resIndex) => {
-    intervalRef.current.forEach(clearInterval);
-    intervalRef.current = [];
+    clearInterval(firstIntervalRef.current);
+    clearInterval(secIntervalRef.current)
 
     // eslint-disable-next-line
-    intervalFirstText = setInterval(() => {
+    firstIntervalRef.current = setInterval(() => {
       if (firstIndex >= resRef.current[resIndex].length) {
         if (resRef.current[resIndex + 1]) {
           setTimeout(() => {
             // eslint-disable-next-line
-            timeoutInterval = setInterval(() => {
+            secIntervalRef.current = setInterval(() => {
               cleanUp();
               if (textRef.current === "") {
                 firstIndex = 0;
                 resIndexRef.current++;
-                clearInterval(timeoutInterval);
+                clearInterval(secIntervalRef.current)
                 animFn(firstIndex, resIndexRef.current);
               }
             }, 80);
-          }, 2000);
-          clearInterval(intervalFirstText);
+          }, 400);
+          clearInterval(firstIntervalRef.current);
         } else {
           if (fetchRef.current) {
-            clearInterval(intervalFirstText);
+            clearInterval(firstIntervalRef.current)
           }
         }
       }
@@ -61,29 +58,22 @@ const TextAnim = (props) => {
   };
 
   useEffect(() => {
-    let cleanUpInterval;
-    intervalRef.current.push(cleanUpInterval);
 
-    const isIntervalRunning = intervalRef.current.some(
-      (interval) => interval !== null
-    );
-
-    if (resIndex !== 0 && resIndex === res.length - 1 && isIntervalRunning) {
-      clearInterval(intervalRef.current.forEach(clearInterval));
-
-        cleanUpInterval = setInterval(() => {
+    if (resIndex !== 0 && resIndex === res.length - 1) {
+      clearInterval(firstIntervalRef.current);
+      clearInterval(secIntervalRef.current)
+      setTimeout(()=>{
+        let cleanUpInterval = setInterval(() => {
           cleanUp();
           if (textRef.current === "") {
             clearInterval(cleanUpInterval);
             animFn(0, resIndex);
           }
         }, 80);
-    } else {
-      resRef.current = res;
+      }, 200)
     }
-
-    return ()=>{
-      intervalRef.current.forEach(clearInterval)
+    else{
+      resRef.current = res;
     }
 
     //eslint-disable-next-line
@@ -103,13 +93,14 @@ const TextAnim = (props) => {
 
     return () => {
       // eslint-disable-next-line
-      intervalRef.current.forEach(clearInterval);
+      clearInterval(firstIntervalRef.current);
+      clearInterval(secIntervalRef.current)
     };
 
     // eslint-disable-next-line
   }, []);
 
-  return <>{text}</>;
+  return <span className="text-anim">{text}</span>;
 };
 
 export default TextAnim;

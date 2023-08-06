@@ -5,16 +5,18 @@ import AuthContext from "../auth/AuthContext";
 const NoteState = (props) => {
   const host = "http://localhost:5000";
 
-  const { authToken } = useContext(AuthContext);
+  const { authToken, loggedIn } = useContext(AuthContext);
   const [notes, setNotes] = useState([]);
   const [res, setRes] = useState(["Please wait..."]);
   const [ fetched, setFetched ] = useState(false);
 
   const fetchNotes = async () => {
 
-    if (authToken === null) {
+    setNotes([]);
+
+    if (!loggedIn ) {
       setFetched(prev=>!prev);
-      setRes([res[0],"Login or Signup to add your personal notes!",]);
+      setRes([res[0],"Login or Sign up to add your personal notes!",]);
       return;
     }
 
@@ -36,27 +38,38 @@ const NoteState = (props) => {
       if (data.error) {
         return setRes([
           res[0],
-          "Seems like something went wrong, try logging in again.",
+          "Seems like something went wrong, try logging in again:(",
         ]);
       }
+      setRes([res[0],"You don't have any notes, feel free to add one..."])
       setFetched(prev=>!prev);
       setNotes(data);
     } catch (err) {
       console.error(err);
       return setRes([
         res[0],
-        "Server connection failed, please try again later...",
+        "Server connection failed, please try again later..."
       ]);
     }
-  };
+  }
 
   useEffect(()=>{
-    fetchNotes();
+    // notes is fetched whenever the authToken or loggedIn state of authState.js changes
+      fetchNotes();
     // eslint-disable-next-line
-  },[authToken])
+  },[loggedIn])
 
   //Add a Note
   const addNote = async (title, description, tag) => {
+
+    if(!loggedIn){
+      setRes([
+        res[0],
+        "Seems like something went wrong, try logging in again:(",
+      ]);
+      return
+    }
+
     const requestOptions = {
       method: "POST",
       headers: {
