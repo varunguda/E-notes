@@ -13,7 +13,6 @@ const NoteItem = (props) => {
 
   return (
     <>
-    {console.log(note._id)}
       <div className="col-md-3">
         <div className="card my-3">
           <div className="card-body">

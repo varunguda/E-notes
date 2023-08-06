@@ -4,20 +4,20 @@ import AuthContext from "../context/auth/AuthContext";
 
 const Navbar = () => {
   const location = useLocation();
-  const { loggedIn } = useContext(AuthContext);
+  const { userFetched } = useContext(AuthContext);
 
   return (
     <>
       <nav className="navbar fixed-top navbar-expand-lg" data-bs-theme="dark">
         <div className="container-fluid">
-          <a className="navbar-brand" href="/">
+          <Link className="nav-link navbar-brand" to="/">
             E NOTES
-          </a>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
-            data-bs-target="/navbarSupportedContent"
+            data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent"
             aria-expanded="false"
             aria-label="Toggle navigation"
@@ -49,7 +49,7 @@ const Navbar = () => {
               </li>
             </ul>
             <form className="d-flex">
-              {loggedIn ? (
+              {userFetched ? (
                 <>
                   <abbr title="Logout">
                     <button
