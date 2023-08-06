@@ -14,7 +14,7 @@ const NoteState = (props) => {
 
     setNotes([]);
 
-    if (!loggedIn ) {
+    if (loggedIn === false ) {
       setFetched(prev=>!prev);
       setRes([res[0],"Login or Sign up to add your personal notes!",]);
       return;
@@ -55,7 +55,9 @@ const NoteState = (props) => {
 
   useEffect(()=>{
     // notes is fetched whenever the authToken or loggedIn state of authState.js changes
+    if(loggedIn !== null){
       fetchNotes();
+    }
     // eslint-disable-next-line
   },[loggedIn])
 

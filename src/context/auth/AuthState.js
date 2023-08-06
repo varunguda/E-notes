@@ -3,13 +3,14 @@ import AuthContext from "./AuthContext";
 
 const AuthState = (props) => {
   const port = "http://localhost:5000";
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(null);
   const [authToken, setAuthToken] = useState(localStorage.getItem("token"));
 
   const getUser = async () => {
     setAuthToken(localStorage.getItem("token"));
 
     if (!authToken) {
+      setLoggedIn(false)
       return;
     }
     const requestOptions = {

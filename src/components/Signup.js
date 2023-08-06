@@ -38,7 +38,7 @@ const Signup = () => {
         if(data.errors.some(err=> err.msg.userExist)){
           const userDis = document.querySelector('.username-disclaimer');
           userDis.innerHTML = 'This username is already taken!'
-          userDis.classList.remove('hide')
+          userDis.classList.remove('hide');
         }
       }
     })
