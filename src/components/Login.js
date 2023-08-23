@@ -94,7 +94,7 @@ const Login = () => {
                 color: "rgb(255 195 0)",
               }}
             >
-              Signup here
+              Register here
             </Link>
           </span>
         </div>

@@ -130,7 +130,7 @@ const Signup = () => {
       }
       return false
     }
-    if(e.target.value === 0){
+    if(e.target.value.length === 0){
       emailDis.innerHTML = "Please enter a valid email";
       emailDis.classList.add('hide');
       return false
@@ -251,7 +251,7 @@ const Signup = () => {
       </div>
       <div className="col-md-5 mb-4">
         <label htmlFor="phoneNo" className="form-label">
-          Phone No
+          Phone No (optional)
         </label>
         <input
           type="text"
